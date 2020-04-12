@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # coding by liuyunfei 
-# 2020-4-8
+# 2020-4-12
 
 
 import sys
@@ -53,12 +53,12 @@ class UpdateImg(QObject):
         for name in fnames:
             im = cv2.imread(name,1)
             dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
-            board = cv2.aruco.CharucoBoard_create(7, 9, .015, .0111, dictionary)#0.025单位是米    
+            board = cv2.aruco.CharucoBoard_create(7, 9, .015, .0111, dictionary)  #0.025单位是米    
             corners, ids, rejected = cv2.aruco.detectMarkers(im, dictionary)
             print(len(corners))
             if corners == None or len(corners) == 0:
                 continue
-            ret, charucoCorners, charucoIds = cv2.aruco.interpolateCornersCharuco(corners, ids, im, board)#其中的参数依赖于detectMarkers检测的初始值
+            ret, charucoCorners, charucoIds = cv2.aruco.interpolateCornersCharuco(corners, ids, im, board)  #其中的参数依赖于detectMarkers检测的初始值
             if corners is not  None  and charucoIds is not None:
                 if len(corners) == 31:
                     allCorners.append(charucoCorners)
@@ -117,7 +117,7 @@ class MyWindow(QMainWindow,Ui_Dialog):
         self.cap = None
         self.sleep = False
         self.getSetInfo()
-        #self.cap.open()
+        
 
     def getSetInfo(self):
         camera_no = self.lineEdit1.text()
@@ -151,8 +151,7 @@ class MyWindow(QMainWindow,Ui_Dialog):
             corners, ids, rejected = cv2.aruco.detectMarkers(frame,dd)            
             if corners == None or len(corners) == 0:
                 pass
-            else:
-                ret, charucoCorners, charucoIds = cv2.aruco.interpolateCornersCharuco(corners, ids, frame, board)#其中的参数依赖于detectMarkers检测的初始值
+            else:                
                 cv2.aruco.drawDetectedMarkers(frame,corners,ids)                        
             image_mutex.lock()
             image = deepcopy(frame)
@@ -214,7 +213,7 @@ class MyWindow(QMainWindow,Ui_Dialog):
         print("({}),img saved. {}".format(num_i,name))
         num_i +=1
 
-    def OnCloseCameraBtn(self):        
+    def OnCloseCameraBtn(self):
         self.timer.stop()        
         self.updataImg.disconnect()
         #self.updataImg.update_pix1.disconnect()
